@@ -1,43 +1,47 @@
-# 🧩 Service Web RESTful – TP Spring Boot
+# 🧩 Service Web RESTful – TP Spring Data REST
 
-Ce projet est une **API RESTful** développée avec **Spring Boot** dans le cadre d’un **travail pratique (TP)** sur les **services web**.  
-Il illustre la création, la lecture, la mise à jour et la suppression (CRUD) de données utilisateur selon le **style architectural REST**.
+Ce projet est une **API RESTful** développée avec **Spring Boot** et **Spring Data REST** dans le cadre d’un **travail pratique (TP)** sur les **services web RESTful**.  
+Il illustre la génération automatique des endpoints CRUD pour les entités `Etudiant` et `Centre` sans implémenter manuellement de contrôleurs.
 
 ---
 
 ## 🚀 Structure du Projet
-
 ```
-.emsi.restfull_tp
-┣ 📂 controller
-┃ ┗ 📄 UserController.java
-┣ 📂 model
-┃ ┗ 📄 User.java
-┗ 📂 service
-┃ ┗ 📄 UserService.java
+com.example.springdataresttp
+┣ 📂 entities
+┃ ┣ 📄 Etudiant.java
+┃ ┣ 📄 Centre.java
+┃ ┗ 📄 Genre.java
+┣ 📂 repositories
+┃ ┣ 📄 EtudiantRepository.java
+┃ ┗ 📄 CentreRepository.java
+┗ 📄 SpringDataRestTpApplication.java
 ```
 
 ---
 
 ## ⚙️ Technologies Utilisées
-
 - ☕ **Java 17+**
-- 🌱 **Spring Boot** (Spring Web)
-- 🧩 **Lombok**
+- 🌱 **Spring Boot**
+- 🧩 **Spring Data REST**
+- 🧠 **Spring Data JPA**
+- 🧱 **H2 Database (en mémoire)**
+- 🧰 **Lombok**
 - 🔧 **Maven**
-- 🌐 **Principes RESTful**
 
 ---
 
-## 🧱 Fonctionnalités
+## 🌐 Fonctionnalités
 
 | Méthode | Endpoint | Description |
 |----------|-----------|-------------|
-| `GET` | `/users` | Récupère la liste de tous les utilisateurs |
-| `GET` | `/user/{id}` | Récupère un utilisateur par son ID |
-| `POST` | `/add` | Ajoute un nouvel utilisateur |
-| `PUT` | `/update/{id}` | Met à jour un utilisateur existant |
-| `DELETE` | `/supp?id={id}` | Supprime un utilisateur par ID |
+| `GET` | `/students` | Récupère la liste de tous les étudiants |
+| `GET` | `/students/{id}` | Récupère un étudiant par son ID |
+| `POST` | `/students` | Ajoute un nouvel étudiant |
+| `PUT` | `/students/{id}` | Met à jour un étudiant existant |
+| `DELETE` | `/students/{id}` | Supprime un étudiant |
+| `GET` | `/students/search/findEtudiantsByNom?nom={nom}` | Recherche un étudiant par son nom |
+| `GET` | `/centres` | Récupère la liste des centres |
 
 ---
 
@@ -45,10 +49,8 @@ Il illustre la création, la lecture, la mise à jour et la suppression (CRUD) d
 
 ```json
 [
-  { "id": 1, "nom": "Mohammed", "mail": "mhd@mail.com" },
-  { "id": 2, "nom": "Moad", "mail": "moad@mail.com" },
-  { "id": 3, "nom": "Sana", "mail": "sana@mail.com" },
-  { "id": 4, "nom": "Ahlam", "mail": "ahlam@mail.com" }
+  { "id": 1, "nom": "Adnani", "prenom": "Morad", "genre": "Homme" },
+  { "id": 2, "nom": "Sara", "prenom": "Benali", "genre": "Femme" }
 ]
 ```
 
@@ -56,51 +58,74 @@ Il illustre la création, la lecture, la mise à jour et la suppression (CRUD) d
 
 ## 🧪 Exécution du Projet
 
-1. **Cloner le dépôt**
+### 1️⃣ Cloner le dépôt
+```bash
+git clone https://github.com/Oussamoux1234/spring-data-rest-tp.git
+cd spring-data-rest-tp
+```
 
-   ```bash
-   git clone https://github.com/Oussamoux1234/rest_tp.git
-   cd rest_tp
-   ```
+### 2️⃣ Ouvrir le projet dans ton IDE préféré  
+*(IntelliJ IDEA, Eclipse ou VS Code)*
 
-2. **Ouvrir le projet** dans ton IDE préféré (IntelliJ IDEA, Eclipse ou VS Code)
+### 3️⃣ Lancer l’application
+```bash
+mvn spring-boot:run
+```
 
-3. **Lancer l’application**
-
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. **Tester les endpoints** avec Postman, cURL ou ton navigateur :
-
-   - [http://localhost:8080/users](http://localhost:8080/users)
-   - [http://localhost:8080/user/1](http://localhost:8080/user/1)
+### 4️⃣ Tester les endpoints avec Postman ou ton navigateur :
+- 🔹 [http://localhost:8080/students](http://localhost:8080/students)
+- 🔹 [http://localhost:8080/students/1](http://localhost:8080/students/1)
+- 🔹 [http://localhost:8080/centres](http://localhost:8080/centres)
+- 🔹 [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 
 ---
 
-## 📦 Exemple de JSON (Ajout / Mise à jour)
-
+## 📦 Exemple de JSON (Création / Mise à jour)
 ```json
 {
-  "id": 5,
   "nom": "Oussama",
-  "mail": "oussama@mail.com"
+  "prenom": "Essalmani",
+  "genre": "Homme"
 }
 ```
 
 ---
 
-## 🧰 Dépendances (pom.xml)
+## ⚙️ Configuration H2
+```properties
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:centredb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=create
+```
 
+---
+
+## 🧰 Dépendances (pom.xml)
 ```xml
 <dependencies>
-    <!-- Démarrage Web de Spring Boot -->
+    <!-- Spring Boot Starter Data REST -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
+        <artifactId>spring-boot-starter-data-rest</artifactId>
     </dependency>
 
-    <!-- Lombok pour simplifier le code -->
+    <!-- Spring Boot Starter Data JPA -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- H2 Database -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
+    <!-- Lombok -->
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -108,7 +133,7 @@ Il illustre la création, la lecture, la mise à jour et la suppression (CRUD) d
         <scope>provided</scope>
     </dependency>
 
-    <!-- Outils de test Spring Boot -->
+    <!-- Tests -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
@@ -120,24 +145,21 @@ Il illustre la création, la lecture, la mise à jour et la suppression (CRUD) d
 ---
 
 ## 🎯 Objectifs Pédagogiques
-
-- Comprendre les bases de l’**architecture REST**
-- Créer une **API REST** avec **Spring Boot**
-- Utiliser les principales annotations :
-  - `@RestController`
-  - `@GetMapping`
-  - `@PostMapping`
-  - `@PutMapping`
-  - `@DeleteMapping`
-- Gérer les échanges **JSON**
-- Implémenter une couche **Service** sans base de données
+- Comprendre le fonctionnement du module **Spring Data REST**
+- Générer automatiquement des endpoints REST à partir des **repositories JPA**
+- Manipuler des entités liées (`Etudiant` ↔ `Centre`)
+- Utiliser les annotations :
+  - `@Entity`
+  - `@RepositoryRestResource`
+  - `@ManyToOne`, `@OneToMany`
+  - `@Enumerated(EnumType.STRING)`
+- Tester les API CRUD avec **Postman** ou **H2 Console**
 
 ---
 
 ## 👨‍💻 Auteur
-
 **Oussama Essalmani**  
-🎓 *Étudiant à l’EMSI – École Marocaine des Sciences de l’Ingénieur*  
-📧 [Profil LinkedIn](https://www.linkedin.com/in/oussama-essalmani-a78aa7276/)  
-💬 Projet réalisé dans le cadre du **TP : Développement d’un Service Web RESTful avec Spring Boot**
-
+🎓 Étudiant à l’**EMSI – École Marocaine des Sciences de l’Ingénieur**  
+💬 Projet réalisé dans le cadre du TP : *Création d’un Web Service RESTful avec Spring Data REST*  
+📧 [LinkedIn – Profil Professionnel](#)
+````
