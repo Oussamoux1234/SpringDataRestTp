@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 
-@RepositoryRestResource(path = "students")
+//@RepositoryRestResource(path = "students")
 public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
     List<Etudiant> findEtudiantsByNom(@Param("nom") String nom);
 }
